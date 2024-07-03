@@ -2,7 +2,7 @@
 
 ## Overview
 
-This tool captures network traffic using `tshark`, analyzes the captured data with `NetworkMinerCLI`, extracts artifacts, and generates a timeline of extracted artifacts with timestamps. The timeline is saved as a CSV file with columns for `Location`, `Artifact`, `Artifact Type`, and `Timestamp`.
+This tool captures network traffic using `tshark`, analyzes the captured data with `NetworkMinerCLI`, extracts artifacts, and generates a timeline of extracted artifacts with timestamps. The timeline is saved as a CSV file with columns for `Location`, `Artifact`, `Artifact Type`, `Timestamp`, and  `Host IP`.
 
 ## Prerequisites
 
