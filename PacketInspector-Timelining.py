@@ -9,13 +9,13 @@ def get_user_input():
     tshark_filter = input("Enter the capture filter (e.g., tcp port 80): ")
     pcap_file = input("Enter the name of the pcap file to save (e.g., capture.pcap): ")
     capture_duration = int(input("Enter the capture duration in seconds (e.g., 60): "))
-    
-    networkminer_path = 'C:\\Users\\Jill\\Desktop\\PacketInspector\\networkminer-cli\\NetworkMinerCLI.exe' # Replace with your actual path to NetworkMinerCLI.exe
+  
+    networkminer_path = 'C:\\Users\\Jill\\Desktop\\PacketInspector-Timelining-\\networkminer-cli\\NetworkMinerCLI.exe' # Replace with your actual path to NetworkMinerCLI.exe
     
     return tshark_interface, tshark_filter, pcap_file, networkminer_path, capture_duration
 
 def capture_packets(interface, capture_filter, pcap_output):
-    tshark_path = r'C:\\Users\\Jill\\Desktop\\PacketInspector\\Wireshark\\tshark.exe'  # Replace with your actual path to tshark.exe
+    tshark_path = r'C:\\Users\\Jill\\Desktop\\PacketInspector-Timelining-\\Wireshark\\tshark.exe'  # Replace with your actual path to tshark.exe
     tshark_command = [
         tshark_path,
         '-i', interface,
@@ -43,11 +43,14 @@ def extract_files_with_timestamps(networkminer_output_dir):
             file_path = os.path.join(root, file)
             file_stat = os.stat(file_path)
             file_timestamp = datetime.fromtimestamp(file_stat.st_mtime, tz=timezone.utc)  # Normalize to UTC
-            artifacts.append((root, file, os.path.splitext(file)[1][1:], file_timestamp))
+            # Extracting IP address from directory structure
+            relative_path = os.path.relpath(root, networkminer_output_dir)
+            ip_address = relative_path.split(os.sep)[0]
+            artifacts.append((root, file, os.path.splitext(file)[1][1:], file_timestamp, ip_address))
     return artifacts
 
 def create_timeline_df(artifacts):
-    df = pd.DataFrame(artifacts, columns=['Location', 'Artifact', 'Artifact Type', 'Timestamp'])
+    df = pd.DataFrame(artifacts, columns=['Location', 'Artifact', 'Artifact Type', 'Timestamp', 'Host IP'])
     return df
 
 def save_timeline_to_csv(df, output_file):
@@ -75,7 +78,7 @@ if __name__ == "__main__":
     print(f"Analysis completed. Output stored in networkminer-cli\\AssembledFiles")
     
     # Extract files with timestamps from NetworkMiner output
-    networkminer_output_dir = 'C:\\Users\\Jill\\Desktop\\PacketInspector\\networkminer-cli\\AssembledFiles'  # Replace with your actual path
+    networkminer_output_dir = 'C:\\Users\\Jill\\Desktop\\PacketInspector-Timelining-\\networkminer-cli\\AssembledFiles'  # Replace with your actual path
     artifacts = extract_files_with_timestamps(networkminer_output_dir)
     
     # Create a timeline DataFrame
